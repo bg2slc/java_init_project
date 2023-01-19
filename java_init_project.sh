@@ -18,6 +18,7 @@ if ! test -f $CONFIG; then
     echo "Config file not found. Creating in $CONFIG."
     echo -e "AUTHOR=\"My Name\"" >> $CONFIG
 fi
+
 source $CONFIG
 
 ###### CREATE DIR
@@ -42,11 +43,12 @@ createFile() {
 }
 
 ###### INCREMENT Filename 
-    #Checks if strings ends in one of more digits
-    #if yes, increments and returns new string.
-    #if not, appends a 1 and returns new string.
+    # Checks if strings ends in one of more digits
+    # if yes, increments and returns new string.
+    # if not, appends a 1 and returns new string.
 incrementFilename()   {
     FILENAME=$1
+
     NUMBER=`echo $FILENAME|grep -Po '\d+$'`
     if [ "$NUMBER" == "" ]; then
         FILENAME=$FILENAME+"1"
@@ -59,8 +61,6 @@ incrementFilename()   {
     fi
     echo $FILENAME
 }
-
-
 
 ###### CREATEPROJECT FUNCTION
 createProject()   {
@@ -99,9 +99,7 @@ run:
     return
 }
 
-
 ###### MAIN FUNCTION
-
 PROJECTNAME="";
 if ["$1" == ""]; then
     PROJECTNAME="JavaApp1"
@@ -115,7 +113,6 @@ if test -d "$PROJECTNAME"; then
         PROJECTNAME=$(incrementFilename $PROJECTNAME)
     done
     echo "creating $PROJECTNAME"
-
 else
     read -p "Creating project $PROJECTNAME
     Continue? (Y/n): "
