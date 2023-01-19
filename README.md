@@ -2,6 +2,15 @@ By Benjamin Garrett
 
 A simple bash script for creating a java project to the specs of 
 our class, COMP305 Introduction to Java.
+
+REQUIREMENTS:
+bash, grep, sed
+
+INSTALLATION:
+Simply move script into any folder in your bin $PATH. /usr/local/bin or 
+$HOME/.bin is recommended.
+
+USAGE:
 Usage: from the command line, run
 
 $ java_init_project ProjectName
