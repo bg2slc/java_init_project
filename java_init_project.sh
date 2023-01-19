@@ -1,8 +1,8 @@
 #!/bin/bash
+#   By Benjamin Garrett
 #
 #   A simple bash script for creating a java project to the specs of 
 #   our class, COMP305 Introduction to Java.
-#   By Benjamin Garrett
 #   Usage: from the command line, run
 #
 #   $ java_init_project ProjectName
