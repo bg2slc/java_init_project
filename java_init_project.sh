@@ -12,32 +12,21 @@
 #   It will also create several subdirectories, an App.java file under src,
 #   and a Makefile.
 
-CONFIG="${HOME}/.config/java_init_project.conf"
-
-if ! test -f $CONFIG; then
-    echo "Config file not found. Creating in $CONFIG."
-    echo -e "AUTHOR=\"My Name\"" >> $CONFIG
-fi
-
-source $CONFIG
-
 ###### CREATE DIR
 createDir() {
     mkdir -p $1
-    if test -d $1; then
-        echo "Created directory $1"
-    else
+    if ! test -d $1; then
         echo "Error: failed to create $1"
+        exit 1
     fi
     return
 }
 
 createFile() {
     touch $1
-    if test -f $1; then
-        echo "Created directory $1"
-    else
+    if ! test -f $1; then
         echo "Error: failed to create $1"
+        exit 1
     fi
     return
 }
@@ -49,15 +38,13 @@ createFile() {
 incrementFilename()   {
     FILENAME=$1
 
-    NUMBER=`echo $FILENAME|grep -Po '\d+$'`
+    NUMBER=`echo $FILENAME | grep -Po '\d+$'`
     if [ "$NUMBER" == "" ]; then
         FILENAME=$FILENAME+"1"
     else
         NUMBER=$((1+$NUMBER))
-        FILENAME=`echo $FILENAME|grep -Pv '\d+$'`
-        echo "$FILENAME is the inverted result"
+        FILENAME=`echo $FILENAME | sed -r 's/[0-9]{1,10}$//'`
         FILENAME="$FILENAME$NUMBER"
-        echo "converting to $FILENAME"
     fi
     echo $FILENAME
 }
@@ -100,6 +87,15 @@ run:
 }
 
 ###### MAIN FUNCTION
+CONFIG="${HOME}/.config/java_init_project.conf"
+
+if ! test -f $CONFIG; then
+    echo "Config file not found. Creating in $CONFIG."
+    echo -e "AUTHOR=\"My Name\"" >> $CONFIG
+fi
+
+source $CONFIG
+
 PROJECTNAME="";
 if ["$1" == ""]; then
     PROJECTNAME="JavaApp1"
@@ -108,19 +104,19 @@ else
 fi
 
 if test -d "$PROJECTNAME"; then
-    echo "$PROJECTNAME exists."
+    echo -n "$PROJECTNAME already exists. "
     while test -d "$PROJECTNAME"; do
         PROJECTNAME=$(incrementFilename $PROJECTNAME)
     done
-    echo "creating $PROJECTNAME"
-else
-    read -p "Creating project $PROJECTNAME
-    Continue? (Y/n): "
-    if [[ "$REPLY" == "" || "$REPLY" == "Y"|| "$REPLY" == "y" ]]; then
-        echo -e "Confirmed. Generating..."
-        createProject $PROJECTNAME
-    else
-        echo -e "Exiting..."
-    fi
 fi
+
+read -p "Creating project $PROJECTNAME
+Continue? (Y/n): "
+if [[ "$REPLY" == "" || "$REPLY" == "Y"|| "$REPLY" == "y" ]]; then
+    echo -e "Confirmed. Generating..."
+    createProject $PROJECTNAME
+else
+    echo -e "Exiting..."
+fi
+
 echo -e "Complete."
