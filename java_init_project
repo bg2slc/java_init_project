@@ -94,12 +94,18 @@ if ! test -f $CONFIG; then
     echo -e "AUTHOR=\"My Name\"" >> $CONFIG
 fi
 
+if [[ "$" == "-h" || "$1" == "--help" || "$1" == "--usage" ]]; then
+    echo "Usage: java_init_project (ProjectName)"
+    exit 0
+fi
+
 source $CONFIG
 
 PROJECTNAME="";
 if ["$1" == ""]; then
     PROJECTNAME="JavaApp1"
 else
+
     PROJECTNAME=$1
 fi
 
