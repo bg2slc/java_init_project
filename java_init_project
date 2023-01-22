@@ -13,27 +13,33 @@
 #   and a Makefile.
 
 ###### CREATE DIR
+    #Creates dir, ensures that dir was created.
 createDir() {
-    mkdir -p $1
-    if ! test -d $1; then
-        echo "Error: failed to create $1"
+    NAME=$1
+
+    mkdir -p $NAME
+    if ! test -d $NAME; then
+        echo "Error: failed to create $NAME"
         exit 1
     fi
     return
 }
-
+###### CREATE FILE
+    #Creates file, ensures that file was created.
 createFile() {
-    touch $1
-    if ! test -f $1; then
-        echo "Error: failed to create $1"
+    NAME=$1
+
+    touch $NAME
+    if ! test -f $NAME; then
+        echo "Error: failed to create $NAME"
         exit 1
     fi
     return
 }
 
 ###### INCREMENT Filename 
-    # Checks if strings ends in one of more digits
-    # if yes, increments and returns new string.
+    # Checks if strings ends in a number of one of more digits
+    # if yes, increments number and returns new string.
     # if not, appends a 1 and returns new string.
 incrementFilename()   {
     FILENAME=$1
@@ -57,9 +63,8 @@ createProject()   {
     createDir "$PROJECTNAME/bin"
     createDir "$PROJECTNAME/res"
     cd "$PROJECTNAME"
-
     createFile "src/App.java"
-    echo -e "/** Written by $AUTHOR **/
+    echo "/** Written by $AUTHOR **/
 package src; //compiled bin goes into ${PROJECTNAME}/bin/src
 
 class App{
@@ -75,12 +80,15 @@ files := src/App.java
 all: clean compile run
 
 compile: \$(files)
+\t@echo \"MAKE: Compiling Java Bytecode\"
 \tjavac \$(files) -d bin
 
 clean:
-\t@rm -f bin/*
+\t@echo \"MAKE: Deleting contents of ./bin\"
+\t@rm -rvf bin/*
 
 run:
+\t@echo \"MAKE: Launching program\"
 \tjava -cp bin src.App" >> Makefile
     git init
     return
@@ -110,13 +118,16 @@ else
 fi
 
 if test -d "$PROJECTNAME"; then
-    echo -n "$PROJECTNAME already exists. "
+    echo "WARNING: $PROJECTNAME already exists. "
+    echo -n "Renaming to "
     while test -d "$PROJECTNAME"; do
         PROJECTNAME=$(incrementFilename $PROJECTNAME)
     done
+else
+    echo -n "Creating "
 fi
 
-read -p "Creating project $PROJECTNAME
+read -p "project $PROJECTNAME
 Continue? (Y/n): "
 if [[ "$REPLY" == "" || "$REPLY" == "Y"|| "$REPLY" == "y" ]]; then
     echo -e "Confirmed. Generating..."
